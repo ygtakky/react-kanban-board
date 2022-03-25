@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux"
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../redux/userSlice";
 
@@ -14,28 +8,39 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const {isLoggedIn} = useSelector(state=>state.user);
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/")
+    }
+  }, [isLoggedIn, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(signupUser({
-      username: username,
-      password: password,
-      passwordConfirm: passwordConfirm
-    }))
+    await dispatch(
+      signupUser({
+        username: username,
+        password: password,
+        passwordConfirm: passwordConfirm,
+      })
+    );
     clearFields();
-    navigate("/")
-  }
+  };
 
   const clearFields = () => {
     setUsername("");
     setPassword("");
-  }
+  };
 
   return (
-    <Container maxWidth="xs" sx={{display: "flex", alignItems: "center" ,height: "80vh"}}>
+    <Container
+      maxWidth="xs"
+      sx={{ display: "flex", alignItems: "center", height: "80vh" }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -57,7 +62,7 @@ function Register() {
             label="Username"
             name="username"
             value={username}
-            onChange={(e)=>setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             autoFocus
           />
           <TextField
@@ -68,7 +73,7 @@ function Register() {
             type="password"
             id="password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
           />
           <TextField
@@ -80,7 +85,7 @@ function Register() {
             type="password"
             id="confirmPassword"
             value={passwordConfirm}
-            onChange={(e)=>setPasswordConfirm(e.target.value)}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
           />
           <Button
             type="submit"
@@ -94,7 +99,7 @@ function Register() {
         </Box>
       </Box>
     </Container>
-  )
+  );
 }
 
-export default Register
+export default Register;

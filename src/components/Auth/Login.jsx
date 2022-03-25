@@ -1,27 +1,33 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../redux/userSlice";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const {isLoggedIn} = useSelector(state=>state.user);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/")
+    }
+  }, [isLoggedIn, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (username && password) {
-      await dispatch(
+      dispatch(
         loginUser({
           username: username,
           password: password,
         })
       );
       clearFields();
-      navigate("/");
     }
   };
 

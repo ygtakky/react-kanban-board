@@ -7,11 +7,17 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import React from "react";
+import React, { useState } from "react";
 import ListSettingsMenu from "./ListSettingsMenu";
+import UpdateList from "./UpdateList";
 
 const ListCard = ({ data }) => {
+  const [titleEdit, setTitleEdit] = useState(false);
+
+  const handleEdit = () => {
+    setTitleEdit(!titleEdit);
+  };
+
   return (
     <Card
       sx={{
@@ -23,12 +29,14 @@ const ListCard = ({ data }) => {
         alignSelf: "flex-start",
       }}
     >
-      <CardHeader
-        title={data.title}
-        action={
-          <ListSettingsMenu id={data.id}/>
-        }
-      />
+      {titleEdit ? (
+        <UpdateList setEdit={handleEdit} title={data.title} id={data.id} />
+      ) : (
+        <CardHeader
+          title={data.title}
+          action={<ListSettingsMenu id={data.id} setEdit={handleEdit} />}
+        />
+      )}
       <CardContent
         sx={{
           display: "flex",
@@ -38,7 +46,7 @@ const ListCard = ({ data }) => {
         }}
       >
         <List disablePadding>
-          <Divider/>
+          <Divider />
           <ListItem disableGutters>
             <Typography variant="body1">list item 1</Typography>
           </ListItem>

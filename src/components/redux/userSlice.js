@@ -1,23 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { axiosInstance } from "./service";
 
 export const signupUser = createAsyncThunk(
   "user/signupUser",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:80/auth/register", {
-        username: payload.username,
-        password: payload.password,
-        passwordConfirm: payload.passwordConfirm,
-      });
+      const response = await axiosInstance.post(
+        "auth/register",
+        {
+          username: payload.username,
+          password: payload.password,
+          passwordConfirm: payload.passwordConfirm,
+        },
+      );
 
       if (response.status === 200) {
         const user = response.data;
         localStorage.setItem("token", user.token);
-        return {user};
+        return { user };
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response);
     }
   }
 );
@@ -26,17 +29,17 @@ export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (payload, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:80/auth/login", {
+      const response = await axiosInstance.post("auth/login", {
         username: payload.username,
         password: payload.password,
       });
       if (response.status === 200) {
         const user = response.data;
         localStorage.setItem("token", user.token);
-        return {user};
+        return { user };
       }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response);
     }
   }
 );
@@ -50,27 +53,27 @@ const userSlice = createSlice({
   },
   reducers: {
     setIsLoggedIn: (state, action) => {
+      state.authToken = action.payload.token;
       state.isLoggedIn = action.payload.isLoggedIn;
-      if (action.payload.isLoggedIn === false) {
-        localStorage.removeItem("token");
-      }
     },
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, action) => {
       state.id = action.payload.user.id;
       state.username = action.payload.user.username;
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`;
     },
     [signupUser.rejected]: (state, action) => {
-      alert(action.payload);
+      console.log(action.payload);
     },
     [loginUser.fulfilled]: (state, action) => {
       state.id = action.payload.user.id;
       state.username = action.payload.user.username;
       state.isLoggedIn = true;
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`;
     },
     [loginUser.rejected]: (state, action) => {
-      alert(action.payload);
+      console.log(action);
     },
   },
 });

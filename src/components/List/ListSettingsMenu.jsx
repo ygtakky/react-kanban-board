@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch } from "react-redux";
 import { deleteList } from "../redux/listsSlice";
 
-export default function ListSettingsMenu({id}) {
+export default function ListSettingsMenu({id, setEdit }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -22,6 +22,11 @@ export default function ListSettingsMenu({id}) {
 
   const handleDelete = () => {
     dispatch(deleteList({id: id}));
+    handleClose();
+  }
+
+  const handleEdit = () => {
+    setEdit();
     handleClose();
   }
 
@@ -45,7 +50,7 @@ export default function ListSettingsMenu({id}) {
           </ListItemIcon>
           <ListItemText primary="Remove List" />
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleEdit}>
           <ListItemIcon>
             <EditIcon />
           </ListItemIcon>

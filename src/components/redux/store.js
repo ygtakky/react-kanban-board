@@ -1,30 +1,23 @@
-import { configureStore } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage"
-import { combineReducers } from "@reduxjs/toolkit";
-import {FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE} from "redux-persist"
+import { configureStore, combineReducers, createAction } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import boardsReducer from "./boardsSlice";
 import listsReducer from "./listsSlice";
 
-const reducers = combineReducers({
+const combinedReducers = combineReducers({
   user: userReducer,
   boards: boardsReducer,
-  lists: listsReducer
-})
+  lists: listsReducer,
+});
 
-const persistConfig = {
-  key: 'root',
-  storage,
+export const resetAction = createAction("reset")
+
+const rootReducer = (state, action) => {
+  if (resetAction.match(action)) {
+    return combinedReducers(undefined,action)
+  }
+  return combinedReducers(state,action)
 }
 
-const presistedReducer = persistReducer(persistConfig, reducers);
-
 export default configureStore({
-  reducer: presistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
-})
+  reducer: rootReducer
+});

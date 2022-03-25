@@ -13,10 +13,10 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createList } from "../redux/listsSlice";
 
-const AddCard = () => {
+const AddList = () => {
   const [inputState, setInputState] = useState(false);
   const [value, setValue] = useState("");
-  const currentBoardId = useSelector(state=>state.boards.currentBoard.id);
+  const currentBoard = useSelector(state=>state.boards.currentBoard);
   const dispatch = useDispatch();
 
   const handleInput = () => {
@@ -24,7 +24,7 @@ const AddCard = () => {
   };
 
   const handleAdd = () => {
-    dispatch(createList({title: value, boardId: currentBoardId}))
+    dispatch(createList({title: value, boardId: currentBoard.id}))
     setValue("")
     setInputState(false);
   }
@@ -81,4 +81,4 @@ const AddCard = () => {
   );
 };
 
-export default AddCard;
+export default AddList;

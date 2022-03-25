@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { axiosInstance } from "./helpers";
+import { axiosInstance } from "./service";
 
 // Get list probably not needed board by id already returns this
 /* export const getLists = createAsyncThunk(
@@ -66,6 +66,7 @@ export const updateList = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await axiosInstance.put(`list/${payload.id}`, { title: payload.title })
+      console.log(response)
       if (response.statusText === "OK") {
         const list = response.data;
         return { list }
@@ -78,8 +79,18 @@ export const updateList = createAsyncThunk(
 
 const listsSlice = createSlice({
   name: "lists",
-  initialState: [],
-  reducers: {},
+  initialState: {
+    lists: [],
+    isFetching: true,
+  },
+  reducers: {
+    resetLists: (state, action) => {
+      state.lists = [];
+    },
+    toggleListFetching: (state, action) => {
+      state.isFetching = action.payload;
+    }
+  },
   extraReducers: {
     // Get list extra reducers
     /* [getLists.fulfilled]: (state, action) => {
@@ -89,13 +100,17 @@ const listsSlice = createSlice({
       alert(action.payload);
     }, */
     [getListsById.fulfilled]: (state, action) => {
-      return action.payload.lists;
+      state.lists = action.payload.lists;
+      state.isFetching = false;
     },
     [getListsById.rejected]: (state, action) => {
       console.table(action.payload)
     },
     [deleteList.fulfilled]: (state, action) => {
-      return state.filter((list) => list.id !== action.payload.id)
+      state.lists = state.lists.filter((list) => list.id !== action.payload.id)
+    },
+    [deleteList.rejected]: (state, action) => {
+      console.log(action.payload)
     },
     [createList.fulfilled]: (state, action) => {
       state.push(action.payload.list)
@@ -104,13 +119,15 @@ const listsSlice = createSlice({
       console.table(action.payload)
     },
     [updateList.fulfilled]: (state, action) => {
-      const index = state.currentLists.findIndex((list) => list.id === action.payload.list.id)
-      state[index] = action.payload.list;
+      const index = state.lists.findIndex((list) => list.id === action.payload.list.id)
+      state.lists[index] = action.payload.list;
     },
     [updateList.rejected]: (state, action) => {
       console.table(action.payload);
     }
   },
 });
+
+export const {resetLists, toggleListFetching} = listsSlice.actions
 
 export default listsSlice.reducer;

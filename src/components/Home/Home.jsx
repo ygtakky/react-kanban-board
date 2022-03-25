@@ -1,9 +1,10 @@
 import { Grid, Typography } from "@mui/material";
-import AddBoard from "../Cards/AddBoard";
-import BoardCard from "../Cards/BoardCard";
+import AddBoard from "../Board/AddBoard";
+import BoardCard from "../Board/BoardCard";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoards } from "../redux/boardsSlice";
+import { getBoards, resetCurrentBoard } from "../redux/boardsSlice";
+import { resetLists, toggleListFetching } from "../redux/listsSlice";
 
 const Home = () => {
   const boards = useSelector(state=>state.boards.boards)
@@ -11,6 +12,9 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getBoards())
+    dispatch(resetCurrentBoard())
+    dispatch(resetLists())
+    dispatch(toggleListFetching(true))
   }, [dispatch])
 
   return (

@@ -3,8 +3,17 @@ import LoginIcon from "@mui/icons-material/Login";
 import RegisterIcon from "@mui/icons-material/AppRegistration";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link as RouterLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLoggedIn } from "./redux/userSlice";
 
-const Navbar = ({ currentUser, currentBoard }) => {
+const Navbar = ({ currentBoard }) => {
+  const userState = useSelector(state=>state.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(setIsLoggedIn({isLoggedIn: false}))
+  }
+
   return (
     <Box>
       <AppBar position="fixed">
@@ -21,8 +30,8 @@ const Navbar = ({ currentUser, currentBoard }) => {
             </Button>
           </Stack>
           { currentBoard  ? (<Typography variant="h6">Board Name</Typography>) : <div></div>}
-          {currentUser ? (
-            <Button color="inherit" component={RouterLink} to="/">
+          { userState.isLoggedIn ? (
+            <Button color="inherit" component={RouterLink} to="/login" onClick={handleLogout}>
               Logout
             </Button>
           ) : (

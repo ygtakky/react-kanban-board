@@ -11,13 +11,13 @@ import Home from "./components/Home/Home";
 function App() {
   return (
     <Box>
-      <Navbar currentUser="" currentBoard={1} />
+      <Navbar currentBoard={1} />
       <Box sx={{display: "flex"}} mt={8}>
       <Routes>
-        <Route path='/' element={<SignInWrapper currentUser="yigit"><Home/></SignInWrapper>} />
+        <Route path='/' element={<SignInWrapper><Home/></SignInWrapper>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/board" element={<MainBoard/>}/>
+        <Route path="/board/:id" element={<MainBoard/>}/>
       </Routes>
       </Box>
     </Box>

@@ -1,41 +1,26 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Fab,
-  Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, Grid } from "@mui/material";
+import ListCard from "../List/ListCard";
+import AddList from "../List/AddList";
+import { useSelector } from "react-redux";
 
 const MainBoard = () => {
+  const lists = useSelector((state) => state.lists);
+
   return (
     <Box m={4}>
-    <Card
-      sx={{
-        width: 300,
-        height: 80,
-        display: "flex",
-        border: "1px solid rgba(0,0,0,0.2)",
-        alignSelf: "flex-start"
-      }}
-    >
-      <CardActionArea>
-        <CardContent sx={{display: "flex", alignItems: "center", gap: 2}}>
-          <Fab
-            color="primary"
-            aria-label="add"
-            size="small"
-            sx={{ boxShadow: "none" }}
-          >
-            <AddIcon />
-          </Fab>
-          <Typography variant="h6" component="div">
-            Add a list
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+      <Grid container gap={6}>
+        {lists &&
+          lists.map((list) => {
+            return (
+              <Grid item key={list.id}>
+                <ListCard data={list} />
+              </Grid>
+            );
+          })}
+        <Grid item>
+          <AddList />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

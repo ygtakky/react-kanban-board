@@ -2,13 +2,19 @@ import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getBoardById } from "../redux/boardsSlice";
+import { getListsById } from "../redux/listsSlice";
 
-const BoardCard = ({ title }) => {
-  let navigate = useNavigate();
+const BoardCard = ({ title, id }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleRoute = () => {
-    navigate("/board", {replace:true})
-  }
+    dispatch(getBoardById({ id: id }));
+    dispatch(getListsById({ id: id }));
+    navigate(`/board/${id}`);
+  };
 
   return (
     <Card

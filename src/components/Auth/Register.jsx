@@ -5,8 +5,35 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom";
+import { signupUser } from "../redux/userSlice";
 
 function Register() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await dispatch(signupUser({
+      username: username,
+      password: password,
+      passwordConfirm: passwordConfirm
+    }))
+    clearFields();
+    navigate("/")
+  }
+
+  const clearFields = () => {
+    setUsername("");
+    setPassword("");
+  }
+
   return (
     <Container maxWidth="xs" sx={{display: "flex", alignItems: "center" ,height: "80vh"}}>
       <Box
@@ -25,22 +52,23 @@ function Register() {
         <Box component="form" sx={{ mt: 1 }}>
           <TextField
             margin="normal"
-            required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            value={username}
+            onChange={(e)=>setUsername(e.target.value)}
             autoFocus
           />
           <TextField
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"
             type="password"
             id="password"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
             autoComplete="current-password"
           />
           <TextField
@@ -51,12 +79,15 @@ function Register() {
             label="Confirm Password"
             type="password"
             id="confirmPassword"
+            value={passwordConfirm}
+            onChange={(e)=>setPasswordConfirm(e.target.value)}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick={handleSubmit}
           >
             Register
           </Button>

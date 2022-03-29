@@ -28,8 +28,8 @@ const AddDialog = () => {
   const handleSubmit = () => {
     if (value) {
       dispatch(createBoard({title: value}));
+      handleClose();
     }
-    handleClose();
   }
 
   return (

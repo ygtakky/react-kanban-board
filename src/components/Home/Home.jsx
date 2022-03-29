@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getBoards, resetCurrentBoard } from "../redux/boardsSlice";
 import { resetLists, toggleListFetching } from "../redux/listsSlice";
+import { getCards } from "../redux/cardsSlice";
+import { getLabels } from "../redux/labelsSlice";
 
 const Home = () => {
   const boards = useSelector(state=>state.boards.boards)
@@ -12,6 +14,8 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getBoards())
+    dispatch(getCards());
+    dispatch(getLabels());
     dispatch(resetCurrentBoard())
     dispatch(resetLists())
     dispatch(toggleListFetching(true))

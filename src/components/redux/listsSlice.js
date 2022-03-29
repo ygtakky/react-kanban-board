@@ -113,7 +113,7 @@ const listsSlice = createSlice({
       console.log(action.payload)
     },
     [createList.fulfilled]: (state, action) => {
-      state.push(action.payload.list)
+      state.lists.push(action.payload.list)
     },
     [createList.rejected]: (state, action) => {
       console.table(action.payload)

@@ -3,24 +3,21 @@ import {
   Modal,
   AppBar,
   Toolbar,
-  Typography,
   Stack,
   IconButton,
   TextField,
-  Icon,
-  Autocomplete,
-  Chip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Checklist from "./Checklist";
 import CardSettingsMenu from "./CardSettingsMenu";
 import CardDueDateMenu from "./CardDueDateMenu";
 import CardChecklistMenu from "./CardChecklistMenu";
 import Comment from "./Comment";
 import Comments from "./Comments";
+import { updateCard } from "../../../redux/cardsSlice";
+import Labels from "./Labels";
 
 const style = {
   position: "absolute",
@@ -36,19 +33,37 @@ const style = {
 
 const CardModal = ({ isOpen, handleClose }) => {
   const card = useSelector((state) => state.cards.currentCard);
-  const labels = useSelector((state) => state.labels);
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [description, setDescription] = useState("");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setTitle(card.title);
-    setDueDate(card.dueDate);
+    setDueDate(card.duedate);
+    setDescription(card.description);
   }, [card]);
+
+  const handleTitleChange = () => {
+    dispatch(updateCard({ id: card.id, title: title, boardId: boardId }));
+  };
+
+  const handleDueDateChange = () => {
+    dispatch(updateCard({ id: card.id, duedate: dueDate, boardId: boardId }));
+  };
+
+  const handleDescriptionChange = () => {
+    dispatch(
+      updateCard({ id: card.id, description: description, boardId: boardId })
+    );
+  };
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
       <Box sx={style}>
-        <AppBar sx={{position:"static", borderTop: "1px solid #141731" }}>
+        <AppBar sx={{ position: "static", borderTop: "1px solid #141731" }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
             <Stack direction="row" gap={2}>
               <CardDueDateMenu boardId={card.boardId} />
@@ -60,7 +75,7 @@ const CardModal = ({ isOpen, handleClose }) => {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Box p={4} sx={{height: "92%",overflowY: "scroll"}}>
+        <Box p={4} sx={{ height: "92%", overflowY: "scroll" }}>
           <Stack
             direction="row"
             justifyContent="space-between"
@@ -75,6 +90,8 @@ const CardModal = ({ isOpen, handleClose }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={handleTitleChange}
             />
             <TextField
               size="small"
@@ -86,6 +103,8 @@ const CardModal = ({ isOpen, handleClose }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              onChange={(e) => setDueDate(e.target.value)}
+              onBlur={handleDueDateChange}
             />
           </Stack>
           <Box my={4}>
@@ -94,46 +113,19 @@ const CardModal = ({ isOpen, handleClose }) => {
               placeholder="Description"
               id="description"
               multiline
-              value={card.description}
+              value={description}
               minRows={4}
+              onChange={(e) => setDescription(e.target.value)}
+              onBlur={handleDescriptionChange}
             />
           </Box>
-          <Box my={4}>
-            <Stack direction="row" gap={1} my={2}>
-              <Icon>
-                <LabelOutlinedIcon />
-              </Icon>
-              <Typography variant="body1" component="div" sx={{fontWeight: 600}}>
-                Labels
-              </Typography>
-            </Stack>
-            <Autocomplete
-              multiple
-              id="tags"
-              options={labels}
-              getOptionLabel={(option) => option.title}
-              renderOption={(props, option) => {
-                  return (<Box {...props} sx={{ width: "100%" }}><Typography variant="body2">{option.title}</Typography></Box>)
-              }}
-              renderTags={(value, getTagProps) => {
-                return value.map((option, index) => (
-                  <Chip label={option.title} {...getTagProps({ index })} sx={{backgroundColor: option.color, color: "white"}} />
-                ));
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Labels"
-                  placeholder="Labels"
-                />
-              )}
-            />
-          </Box>
-          {card.checklists && card.checklists.map((checklist) => (
-            <Checklist key={checklist.id} data={checklist} />
-          ))}
-          <Comment/>
-          <Comments/>
+          <Labels data={card} />
+          {card && card.checklists &&
+            card.checklists.map((checklist) => (
+              <Checklist key={checklist.id} data={checklist} />
+            ))}
+          <Comment />
+          <Comments />
         </Box>
       </Box>
     </Modal>

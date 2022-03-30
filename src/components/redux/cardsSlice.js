@@ -66,8 +66,10 @@ export const updateCard = createAsyncThunk("cards/updateCard", async (payload, t
   try {
     const response = await axiosInstance.put(`/card/${payload.id}`, {
       title: payload.title,
+      listId: payload.listId,
       duedate: payload.duedate,
       description: payload.description,
+      order: payload.order
     });
     if (response.statusText === "OK") {
       thunkAPI.dispatch(getBoardById({id: payload.boardId}));

@@ -70,7 +70,7 @@ export const updateList = createAsyncThunk(
   "lists/updateList",
   async (payload, thunkAPI) => {
     try {
-      const response = await axiosInstance.put(`list/${payload.id}`, { title: payload.title })
+      const response = await axiosInstance.put(`list/${payload.id}`, { title: payload.title, order: payload.order});
       if (response.statusText === "OK") {
         thunkAPI.dispatch(getBoardById({id: payload.boardId}));
         thunkAPI.dispatch(getBoards())

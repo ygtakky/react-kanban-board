@@ -7,16 +7,17 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { getCardById, resetCurrentCard } from "../../redux/cardsSlice";
+import React, { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCardById, resetCurrentCard, updateCard } from "../../redux/cardsSlice";
 import CardModal from "./CardModal/CardModal";
 import DateChip from "./DateChip";
 import LabelChip from "./LabelChip";
 
-const ListItemCard = ({ data, provided }) => {
+const ListItemCard = ({ data, listLength,index, provided }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
 
   const handleOpen = () => {
     dispatch(getCardById({ id: data.id }));
@@ -27,6 +28,10 @@ const ListItemCard = ({ data, provided }) => {
     dispatch(resetCurrentCard());
     setIsOpen(false);
   };
+
+  useMemo(() => {
+    dispatch(updateCard({ id: data.id, listId: data.listId, boardId: boardId, order: index }));
+  }, [index, data.id, data.listId, boardId, dispatch]);
 
   return (
     <ListItem

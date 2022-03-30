@@ -71,7 +71,7 @@ export const deleteBoard = createAsyncThunk(
     try {
       const response = await axiosInstance.delete(`board/${payload.id}`);
       if (response.statusText === "OK") {
-        return payload
+        return payload;
       }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -103,6 +103,26 @@ const boardsSlice = createSlice({
     },
     [getBoardById.fulfilled]: (state, action) => {
       state.currentBoard = action.payload.board;
+      state.currentBoard.lists.sort((a, b) => {
+        if (a.order === null) {
+          return 1;
+        }
+        if (b.order === null) {
+          return 1;
+        }
+        return a.order - b.order;
+      });
+      state.currentBoard.lists.forEach((list) => {
+        list.cards.sort((a, b) => {
+          if (a.order === null) {
+            return 1;
+          }
+          if (b.order === null) {
+            return 1;
+          }
+          return a.order - b.order;
+        });
+      });
     },
     [getBoardById.rejected]: (state, action) => {
       console.log(action.payload);

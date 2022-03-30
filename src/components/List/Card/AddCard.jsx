@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {createCard} from '../../redux/cardsSlice'
 
-const AddCard = ({ id }) => {
+const AddCard = ({ id, boardId }) => {
   const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch()
@@ -30,7 +30,7 @@ const AddCard = ({ id }) => {
 
   const handleAdd = () => {
     if (value) {
-      dispatch(createCard({ title: value, listId: id }));
+      dispatch(createCard({ title: value, listId: id, boardId: boardId }));
       handleClose();
     }
   };

@@ -18,15 +18,16 @@ import { addLabel, removeLabel } from "../../../redux/labelsSlice";
 const Labels = ({ data }) => {
   const labels = useSelector((state) => state.labels);
   const currentLabels = useSelector((state) => state.cards.currentCard.labels);
+  const currentBoardId = useSelector((state) => state.boards.currentBoard.id);
 
   const dispatch = useDispatch();
 
   const handleChange = (value) => {
-    dispatch(addLabel({ id: value, cardId: data.id }));
+    dispatch(addLabel({ id: value, cardId: data.id,boardId: currentBoardId }));
   };
 
   const handleDelete = (labelId) => {
-    dispatch(removeLabel({ id: labelId, cardId: data.id }));
+    dispatch(removeLabel({ id: labelId, cardId: data.id, boardId: currentBoardId}));
   };
 
   return (

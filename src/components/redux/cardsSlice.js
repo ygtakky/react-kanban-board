@@ -1,6 +1,6 @@
 //card store slice
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getBoardById } from "./boardsSlice";
+import { getBoardById, getBoards } from "./boardsSlice";
 import { setComments } from "./commentsSlice";
 import { axiosInstance } from "./service";
 
@@ -36,7 +36,8 @@ export const deleteCard = createAsyncThunk("cards/deleteCard", async (payload, t
   try {
     const response = await axiosInstance.delete(`/card/${payload.id}`);
     if (response.statusText === "OK") {
-      thunkAPI.dispatch(getBoardById(payload.boardId));
+      thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+      thunkAPI.dispatch(getBoards());
       return payload;
     }
   } catch (error) {
@@ -51,7 +52,8 @@ export const createCard = createAsyncThunk("cards/createCard", async (payload, t
       listId: payload.listId,
     });
     if (response.statusText === "OK") {
-      thunkAPI.dispatch(getBoardById(payload.boardId));
+      thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+      thunkAPI.dispatch(getBoards());
       const card = response.data;
       return { card };
     }
@@ -63,14 +65,14 @@ export const createCard = createAsyncThunk("cards/createCard", async (payload, t
 export const updateCard = createAsyncThunk("cards/updateCard", async (payload, thunkAPI) => {
   try {
     const response = await axiosInstance.put(`/card/${payload.id}`, {
-      title: payload?.title,
-      duedate: payload?.duedate,
-      description: payload?.description,
+      title: payload.title,
+      duedate: payload.duedate,
+      description: payload.description,
     });
     if (response.statusText === "OK") {
       thunkAPI.dispatch(getBoardById({id: payload.boardId}));
-      const card = response.data;
-      return { card };
+      thunkAPI.dispatch(getBoards())
+      return thunkAPI.dispatch(getCardById({id: payload.id}));
     }
   } catch (error) {
     thunkAPI.rejectWithValue(error);
@@ -127,11 +129,6 @@ const cardsSlice = createSlice({
     },
     [createCard.rejected]: (state, action) => {
       console.log(action.payload);
-    },
-    [updateCard.fulfilled]: (state, action) => {
-      state.cards = state.cards.map((card) =>
-        card.id === action.payload.card.id ? action.payload.card : card
-      );
     },
     [updateCard.rejected]: (state, action) => {
       console.log(action.payload);

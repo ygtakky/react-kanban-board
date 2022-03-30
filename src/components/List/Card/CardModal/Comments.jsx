@@ -23,7 +23,7 @@ const Comments = () => {
       <List>
         {comments &&
           comments.map((comment) => (
-            <ListItem>
+            <ListItem key={comment.id}>
               <Card sx={{border: "1px solid rgba(0,0,0,0.3)", borderRadius: "4px 16px 16px 4px"}}>
                 <CardHeader title={comment.author.username} titleTypographyProps={{fontSize: 20}} sx={{p: 2, mb: 0}} />
                 <Divider />

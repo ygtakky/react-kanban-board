@@ -7,15 +7,16 @@ import {
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateList } from "../redux/listsSlice";
 
 const UpdateList = ({ id, title, setEdit}) => {
   const [value, setValue] = useState(title);
   const dispatch = useDispatch();
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
 
   const handleUpdate = () => {
-    dispatch(updateList({ title: value, id: id }));
+    dispatch(updateList({ title: value, id: id, boardId: boardId}));
     handleClose();
   };
 

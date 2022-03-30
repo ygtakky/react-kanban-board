@@ -1,5 +1,6 @@
 // board-members slice
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getBoardById, getBoards } from "./boardsSlice";
 import { axiosInstance } from "./service";
 
 export const getBoardMembers = createAsyncThunk(
@@ -27,6 +28,8 @@ export const deleteBoardMember = createAsyncThunk(
         `/board-member/${payload.id}`
       );
       if (response.statusText === "OK") {
+        thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+        thunkAPI.dispatch(getBoards())
         return payload;
       }
     } catch (error) {
@@ -41,6 +44,8 @@ export const addBoardMember = createAsyncThunk(
     try {
       const response = await axiosInstance.post("/board-member", payload);
       if (response.statusText === "OK") {
+        thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+        thunkAPI.dispatch(getBoards())
         const boardMember = response.data;
         return { boardMember };
       }

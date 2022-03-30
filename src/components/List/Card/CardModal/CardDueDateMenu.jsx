@@ -2,7 +2,7 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CardDueDateMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -13,6 +13,8 @@ const CardDueDateMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
 
   const dispatch = useDispatch();
 

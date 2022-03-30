@@ -5,6 +5,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -13,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 import { deleteBoard } from "../redux/boardsSlice";
 import { resetAction } from "../redux/store";
+import BoardMemberModal from "./BoardMemberModal";
 
 const BoardSettingsMenu = ({ setEdit }) => {
   const currentBoard = useSelector((state) => state.boards.currentBoard);
@@ -55,6 +57,7 @@ const BoardSettingsMenu = ({ setEdit }) => {
           "aria-labelledby": "board-settings-button",
         }}
       >
+        <BoardMemberModal />
         <MenuItem component={RouterLink} to="/" onClick={handleDelete}>
           <ListItemIcon>
             <DeleteIcon />

@@ -1,29 +1,40 @@
-import { Box, Grid, Skeleton } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import ListCard from "../List/ListCard";
 import AddList from "../List/AddList";
 import { useSelector } from "react-redux";
+import { DragDropContext } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 
 const MainBoard = () => {
-  const lists = useSelector((state) => state.lists);
+  const lists = useSelector((state) => state.boards.currentBoard.lists);
 
   return (
     <Box m={4}>
-      <Grid container gap={6}>
-        {lists.isFetching ? (
-          <Skeleton variant="rectangular" width={300} height={120} />
-        ) : (
-          lists.lists.map((list) => {
-            return (
-              <Grid item key={list.id}>
-                <ListCard data={list} />
-              </Grid>
-            );
-          })
-        )}
-        <Grid item>
-          <AddList />
+      <DragDropContext
+        onDragEnd={(values) => {
+          console.log(values);
+        }}
+      >
+        <Grid
+          gap={6}
+          sx={{
+            display: "flex",
+            overflowX: "auto",
+            pr: 4,
+            height: "100%",
+            width: "100%",
+          }}
+        >
+          {lists &&
+            lists.map((list, index, array) => {
+              return <ListCard data={list} listLength={array.length} />;
+            })}
+          <Grid item order={lists && lists.length + 2}>
+            <AddList />
+          </Grid>
         </Grid>
-      </Grid>
+      </DragDropContext>
     </Box>
   );
 };

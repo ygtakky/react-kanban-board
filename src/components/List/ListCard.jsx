@@ -1,35 +1,22 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  List,
-} from "@mui/material";
+import { Card, CardContent, CardHeader, Grid, List } from "@mui/material";
 
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import AddCard from "./Card/AddCard";
 import ListItemCard from "./Card/ListItemCard";
 import ListSettingsMenu from "./ListSettingsMenu";
 import UpdateList from "./UpdateList";
 
-const ListCard = ({ data }) => {
+const ListCard = ({ data, listLength}) => {
   const [titleEdit, setTitleEdit] = useState(false);
-  const [listCards, setListCards] = useState([]);
-  const cards = useSelector((state) => state.cards.cards);
-
-  useEffect(() => {
-    if (cards) {
-      const newCards = cards.filter((card) => card.listId === data.id);
-      setListCards(newCards);
-    }
-  }, [cards, data.id]);
 
   const handleEdit = () => {
     setTitleEdit(!titleEdit);
   };
 
   return (
-    <>
+    <Grid item key={data.id} order={data.order || listLength + 1}>
       <Card
         sx={{
           width: 300,
@@ -59,15 +46,34 @@ const ListCard = ({ data }) => {
             width: "100%",
           }}
         >
-          <List>
-            {listCards.map((card) => (
-              <ListItemCard key={card.id} data={card} />
-            ))}
-          </List>
+          <Droppable droppableId={data.title} type="ITEM" >
+            {(provided, snapshot) => {
+              return (
+                <List
+                  sx={{ maxHeight: 330, overflowY: "auto" }}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {data.cards.map((card, index) => {
+                    return (
+                      <Draggable key={card.id} draggableId={card.title} index={index} >
+                        {(provided, snapshot) => {
+                          return (
+                            <ListItemCard data={card} provided={provided} />
+                          )
+                        }}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </List>
+              );
+            }}
+          </Droppable>
         </CardContent>
       </Card>
-      <AddCard id={data.id} />
-    </>
+      <AddCard id={data.id} boardId={data.boardId} />
+    </Grid>
   );
 };
 

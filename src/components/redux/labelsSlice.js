@@ -1,4 +1,5 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { getBoardById, getBoards } from './boardsSlice';
 import { getCardById, getCards } from './cardsSlice';
 import { axiosInstance } from './service';
 
@@ -19,6 +20,8 @@ export const addLabel = createAsyncThunk('labels/addLabel', async (payload, thun
     const response = await axiosInstance.post('/card-label', {labelId: payload.id, cardId: payload.cardId});
     if (response.statusText === 'OK') {
       thunkAPI.dispatch(getCardById({id :payload.cardId}));
+      thunkAPI.dispatch(getBoardById({id :payload.boardId}));
+      thunkAPI.dispatch(getBoards())
       return thunkAPI.dispatch(getCards());
     }
   } catch (error) {
@@ -31,7 +34,8 @@ export const removeLabel = createAsyncThunk('labels/removeLabel', async (payload
     const response = await axiosInstance.delete(`/card-label/${payload.id}`);
     if (response.statusText === 'OK') {
       thunkAPI.dispatch(getCardById({id :payload.cardId}));
-      return thunkAPI.dispatch(getCards());
+      thunkAPI.dispatch(getBoardById({id :payload.boardId}));
+      return thunkAPI.dispatch(getBoards());
     }
   } catch (error) {
     thunkAPI.rejectWithValue(error);

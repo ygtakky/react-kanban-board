@@ -2,10 +2,10 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/mat
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteCard } from "../../../redux/cardsSlice";
 
-const CardSettingsMenu = ({id, boardId}) => {
+const CardSettingsMenu = ({id}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -14,6 +14,8 @@ const CardSettingsMenu = ({id, boardId}) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
 
   const dispatch = useDispatch();
 

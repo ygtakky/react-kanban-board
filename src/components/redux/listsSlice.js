@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getBoardById, getBoards } from "./boardsSlice";
 import { axiosInstance } from "./service";
 
 // Get list probably not needed board by id already returns this
@@ -38,6 +39,8 @@ export const deleteList = createAsyncThunk(
     try {
       const response = await axiosInstance.delete(`list/${payload.id}`)
       if (response.statusText === "OK") {
+        thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+        thunkAPI.dispatch(getBoards())
         return payload;
       }
     } catch (error) {
@@ -52,6 +55,8 @@ export const createList = createAsyncThunk(
     try {
       const response = await axiosInstance.post("list", { title: payload.title ,boardId: payload.boardId});
       if (response.statusText === "OK") {
+        thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+        thunkAPI.dispatch(getBoards())
         const list = response.data;
         return { list };
       }
@@ -66,8 +71,9 @@ export const updateList = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await axiosInstance.put(`list/${payload.id}`, { title: payload.title })
-      console.log(response)
       if (response.statusText === "OK") {
+        thunkAPI.dispatch(getBoardById({id: payload.boardId}));
+        thunkAPI.dispatch(getBoards())
         const list = response.data;
         return { list }
       }

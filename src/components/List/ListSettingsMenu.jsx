@@ -5,7 +5,7 @@ import { IconButton, ListItemIcon, ListItemText } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteList } from "../redux/listsSlice";
 
 export default function ListSettingsMenu({id, setEdit }) {
@@ -18,10 +18,12 @@ export default function ListSettingsMenu({id, setEdit }) {
     setAnchorEl(null);
   };
 
+  const boardId = useSelector((state) => state.boards.currentBoard.id);
+
   const dispatch = useDispatch()
 
   const handleDelete = () => {
-    dispatch(deleteList({id: id}));
+    dispatch(deleteList({id: id, boardId: boardId}));
     handleClose();
   }
 

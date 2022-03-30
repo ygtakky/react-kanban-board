@@ -47,7 +47,9 @@ const CardModal = ({ isOpen, handleClose }) => {
   }, [card]);
 
   const handleTitleChange = () => {
-    dispatch(updateCard({ id: card.id, title: title, boardId: boardId }));
+    if (title !== card.title && title !== "") {
+      dispatch(updateCard({ id: card.id, title: title, boardId: boardId }));
+    }
   };
 
   const handleDueDateChange = () => {
@@ -55,9 +57,11 @@ const CardModal = ({ isOpen, handleClose }) => {
   };
 
   const handleDescriptionChange = () => {
-    dispatch(
-      updateCard({ id: card.id, description: description, boardId: boardId })
-    );
+    if (description !== card.description) {
+      dispatch(
+        updateCard({ id: card.id, description: description, boardId: boardId })
+      );
+    }
   };
 
   return (
@@ -66,9 +70,9 @@ const CardModal = ({ isOpen, handleClose }) => {
         <AppBar sx={{ position: "static", borderTop: "1px solid #141731" }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
             <Stack direction="row" gap={2}>
-              <CardDueDateMenu boardId={card.boardId} />
+              <CardDueDateMenu />
               <CardChecklistMenu cardId={card.id} />
-              <CardSettingsMenu id={card.id} boardId={card.boardId} />
+              <CardSettingsMenu id={card.id} />
             </Stack>
             <IconButton color="inherit" onClick={handleClose}>
               <CloseIcon />
@@ -120,7 +124,8 @@ const CardModal = ({ isOpen, handleClose }) => {
             />
           </Box>
           <Labels data={card} />
-          {card && card.checklists &&
+          {card &&
+            card.checklists &&
             card.checklists.map((checklist) => (
               <Checklist key={checklist.id} data={checklist} />
             ))}

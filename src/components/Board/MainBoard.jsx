@@ -17,9 +17,11 @@ const MainBoard = () => {
         }}
       >
         <Grid
+        container
           gap={6}
           sx={{
-            display: "flex",
+            flexDirection: "row",
+            flexWrap: "nowrap",
             overflowX: "auto",
             pr: 4,
             height: "100%",

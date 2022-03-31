@@ -61,6 +61,7 @@ const userSlice = createSlice({
     [signupUser.fulfilled]: (state, action) => {
       state.id = action.payload.user.id;
       state.username = action.payload.user.username;
+      state.isLoggedIn = true;
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("token")}`;
     },
     [signupUser.rejected]: (state, action) => {

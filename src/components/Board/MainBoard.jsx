@@ -4,15 +4,24 @@ import AddList from "../List/AddList";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Droppable } from "react-beautiful-dnd";
-import { updateList } from "../redux/listsSlice";
 import { updateCard } from "../redux/cardsSlice";
 import { changeItemList, changeListItemOrder, changeListOrder } from "../redux/boardsSlice";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MainBoard = () => {
   const lists = useSelector((state) => state.boards.currentBoard.lists);
   const boardId = useSelector((state) => state.boards.currentBoard.id);
+  const isLoggedIn = useSelector(state=> state.user.isLoggedIn);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleDragEnd = (result) => {
     if (result.type === "LIST") {
@@ -65,6 +74,7 @@ const MainBoard = () => {
                   lists.map((list, index, array) => {
                     return (
                       <ListCard
+                        key={list.id}
                         data={list}
                         listLength={array.length}
                         index={index}

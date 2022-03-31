@@ -41,9 +41,21 @@ const CardModal = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTitle(card.title);
-    setDueDate(card.duedate);
-    setDescription(card.description);
+    if (card.title) {
+      setTitle(card.title);
+    } else {
+      setTitle("")
+    }
+    if (card.dueDate) {
+      setDueDate(card.dueDate);
+    } else {
+      setDueDate("")
+    }
+    if (card.description) {
+      setDescription(card.description);
+    } else {
+      setDescription("")
+    }
   }, [card]);
 
   const handleTitleChange = () => {

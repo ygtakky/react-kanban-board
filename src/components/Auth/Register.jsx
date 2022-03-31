@@ -21,7 +21,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(
+    dispatch(
       signupUser({
         username: username,
         password: password,
@@ -34,6 +34,7 @@ function Register() {
   const clearFields = () => {
     setUsername("");
     setPassword("");
+    setPasswordConfirm("");
   };
 
   return (

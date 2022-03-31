@@ -23,7 +23,7 @@ const ListCard = ({ data, index, listLength }) => {
   }, [dispatch, data.id, data.boardId, index]);
 
   return (
-    <Draggable key={data.id} draggableId={data.id.toString()} index={index}>
+    <Draggable draggableId={data.id.toString()} index={index}>
       {(provided) => {
         return (
           <Grid item {...provided.draggableProps} ref={provided.innerRef} >
@@ -63,7 +63,7 @@ const ListCard = ({ data, index, listLength }) => {
                   width: "100%",
                 }}
               >
-                <Droppable key={data.id} droppableId={index.toString()} type="ITEM">
+                <Droppable droppableId={index.toString()} type="ITEM">
                   {(provided, snapshot) => {
                     return (
                       <List

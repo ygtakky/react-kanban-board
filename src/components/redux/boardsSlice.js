@@ -93,6 +93,25 @@ const boardsSlice = createSlice({
     toggleEditTitle: (state) => {
       state.editTitle = !state.editTitle;
     },
+    changeListOrder: (state, action) => {
+      const { listId, newIndex } = action.payload;
+      const list = state.currentBoard.lists.find((list) => list.id === listId);
+      const oldIndex = state.currentBoard.lists.indexOf(list);
+      state.currentBoard.lists.splice(oldIndex, 1);
+      state.currentBoard.lists.splice(newIndex, 0, list);
+    },
+    changeListItemOrder: (state, action) => {
+      const { sourceIndex, newIndex, listIndex } = action.payload;
+      const card = state.currentBoard.lists[listIndex].cards[sourceIndex];
+      state.currentBoard.lists[listIndex].cards.splice(sourceIndex, 1);
+      state.currentBoard.lists[listIndex].cards.splice(newIndex, 0, card);
+    },
+    changeItemList: (state, action) => {
+      const {sourceIndex, newIndex, listIndex, newListIndex } = action.payload;
+      const card = state.currentBoard.lists[listIndex].cards[sourceIndex];
+      state.currentBoard.lists[listIndex].cards.splice(sourceIndex, 1);
+      state.currentBoard.lists[newListIndex].cards.splice(newIndex, 0, card);
+    },
   },
   extraReducers: {
     [getBoards.fulfilled]: (state, action) => {
@@ -155,6 +174,6 @@ const boardsSlice = createSlice({
   },
 });
 
-export const { resetCurrentBoard, toggleEditTitle } = boardsSlice.actions;
+export const { resetCurrentBoard, toggleEditTitle, changeListOrder ,changeListItemOrder, changeItemList } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

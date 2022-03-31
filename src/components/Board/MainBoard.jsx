@@ -6,6 +6,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { Droppable } from "react-beautiful-dnd";
 import { updateList } from "../redux/listsSlice";
 import { updateCard } from "../redux/cardsSlice";
+import { changeItemList, changeListItemOrder, changeListOrder } from "../redux/boardsSlice";
 
 const MainBoard = () => {
   const lists = useSelector((state) => state.boards.currentBoard.lists);
@@ -13,30 +14,20 @@ const MainBoard = () => {
 
   const dispatch = useDispatch();
 
-  // TODO change this to be a better solution
   const handleDragEnd = (result) => {
     if (result.type === "LIST") {
       if (result.destination) {
         const sourceList = lists[result.source.index];
-        const destinationList = lists[result.destination.index];
-        dispatch(updateList({ id: sourceList.id, boardId: sourceList.boardId, order: destinationList.order }));
-        dispatch(updateList({ id: destinationList.id, boardId: sourceList.boardId, order: sourceList.order }));
+        dispatch(changeListOrder({ listId: sourceList.id, newIndex: result.destination.index }));
       }
     }
     if (result.type === "ITEM") {
       if (result.destination) {
-        const sourceCard = lists[result.source.droppableId].cards[result.source.index];
-        const destinationList = lists[result.destination.droppableId];
-        const destinationCard = destinationList.cards[result.destination.index];
-        if (sourceCard.listId !== destinationList.id) {
-          if (!destinationCard) {
-            dispatch(updateCard({ id: sourceCard.id, listId: destinationList.id, boardId: boardId}));
-          } else {
-            dispatch(updateCard({ id: sourceCard.id, listId: destinationList.id, boardId: boardId, order: destinationCard.order }));
-          }
-        } else {
-          dispatch(updateCard({ id: sourceCard.id, boardId: boardId, order: destinationCard.order }));
-          dispatch(updateCard({ id: destinationCard.id, boardId: boardId, order: sourceCard.order }));
+        if (result.destination.droppableId === result.source.droppableId) {
+          dispatch(changeListItemOrder({sourceIndex: result.source.index, newIndex: result.destination.index, listIndex: result.source.droppableId}))
+        } else if (result.destination.droppableId !== "") {
+          dispatch(changeItemList({sourceIndex: result.source.index, newIndex: result.destination.index, listIndex: result.source.droppableId, newListIndex: result.destination.droppableId}))
+          dispatch(updateCard({boardId: boardId, id: lists[result.source.droppableId].cards[result.source.index].id, listId: lists[result.destination.droppableId].id}))
         }
       }
     }

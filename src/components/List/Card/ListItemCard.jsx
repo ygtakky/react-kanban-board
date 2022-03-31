@@ -30,8 +30,8 @@ const ListItemCard = ({ data, listLength,index, provided }) => {
   };
 
   useMemo(() => {
-    dispatch(updateCard({ id: data.id, listId: data.listId, boardId: boardId, order: index }));
-  }, [index, data.id, data.listId, boardId, dispatch]);
+    dispatch(updateCard({ id: data.id, boardId: boardId, order: index }));
+  }, [index, data.id, boardId, dispatch]);
 
   return (
     <ListItem

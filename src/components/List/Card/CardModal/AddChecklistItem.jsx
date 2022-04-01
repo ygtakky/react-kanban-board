@@ -11,6 +11,7 @@ const AddChecklistItem = ({checklistId, cardId}) => {
 
   const handleAdd = () => {
     dispatch(createChecklistItem({checklistId: checklistId, title: value, isChecked: false, cardId: cardId}));
+    setValue("");
   }
 
   return (

@@ -23,6 +23,7 @@ const AddDialog = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setValue("");
   };
 
   const handleSubmit = () => {

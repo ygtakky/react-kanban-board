@@ -39,8 +39,6 @@ export const updateBoard = createAsyncThunk(
         title: payload.title,
       });
       if (response.statusText === "OK") {
-        thunkAPI.dispatch(getBoards());
-        thunkAPI.dispatch(getBoardById({ id: payload.id }));
         const board = response.data;
         return { board };
       }
@@ -148,13 +146,13 @@ const boardsSlice = createSlice({
     [getBoardById.rejected]: (state, action) => {
       console.log(action.payload);
     },
-    /*[updateBoard.fulfilled]: (state, action) => {
+    [updateBoard.fulfilled]: (state, action) => {
       const index = state.boards.findIndex(
         (board) => board.id === action.payload.board.id
       );
-      state.boards[index] = action.payload.board;
-      state.currentBoard = action.payload.board;
-    },*/
+      state.boards[index] = {...state.boards[index], ...action.payload.board};
+      state.currentBoard = {...state.currentBoard, ...action.payload.board};
+    },
     [updateBoard.rejected]: (state, action) => {
       console.log(action.payload);
     },

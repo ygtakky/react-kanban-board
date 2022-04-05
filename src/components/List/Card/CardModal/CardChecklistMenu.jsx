@@ -29,6 +29,7 @@ const CardChecklistMenu = ({ cardId }) => {
   const handleAdd = () => {
     dispatch(createChecklist({ title: value, cardId: cardId }));
     setValue("");
+    handleClose();
   };
 
   return (

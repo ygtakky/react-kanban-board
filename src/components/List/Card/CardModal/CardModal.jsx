@@ -46,8 +46,8 @@ const CardModal = ({ isOpen, handleClose }) => {
     } else {
       setTitle("")
     }
-    if (card.dueDate) {
-      setDueDate(card.dueDate);
+    if (card.duedate) {
+      setDueDate(card.duedate);
     } else {
       setDueDate("")
     }
